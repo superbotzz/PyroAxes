@@ -1,40 +1,33 @@
 package me.veryawkwardperla;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.ArrayList;
 import org.bukkit.*;
-import org.bukkit.entity.Player;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginManager;
 
-// Referenced classes of package me.veryawkwardperla:
+// Referenced classes of package me.veryawkwareperla:
 //            PyroAxe
 
-public class PyroListener
+public class PyroItem
     implements Listener {
 
-    public PyroListener(PyroAxe plugin) {
+    public PyroItem(PyroAxe plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    public void onDamage(EntityDamageByEntityEvent e) {
-        if(!(e.getDamager() instanceof Player))
-            return;
-        Player p = (Player)e.getDamager();
-        ItemStack item = p.getItemInHand();
-        if(item.hasItemMeta() && item.getItemMeta().hasLore()) {
-            for(Iterator iterator = item.getItemMeta().getLore().iterator(); iterator.hasNext();) {
-                String s = (String)iterator.next();
-                if(ChatColor.stripColor(s).contains("Hills")) {
-                    p.playSound(p.getLocation(), Sound.ANVIL_BREAK, 1.0F, 1.0F);
-                    p.playSound(p.getLocation(), Sound.ANVIL_BREAK, 1.0F, 1.0F);
-                    e.setDamage(e.getDamage() * 3D);
-                }
-            }
-
-        }
+    public static ItemStack makeAxe() {
+        ItemStack item = new ItemStack(Material.DIAMOND_AXE);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName((new StringBuilder()).append(ChatColor.DARK_RED).append("Pyro Axe").toString());
+        ArrayList itemLore = new ArrayList();
+        itemLore.add((new StringBuilder()).append(ChatColor.DARK_RED).append("I Come From The Iron Hills.").toString());
+        itemMeta.addEnchant(Enchantment.DAMAGE_ALL, 5, true);
+        itemMeta.addEnchant(Enchantment.FIRE_ASPECT, 2, true);
+        itemMeta.setLore(itemLore);
+        item.setItemMeta(itemMeta);
+        return item;
     }
 }
